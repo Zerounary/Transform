@@ -14,7 +14,7 @@ def init():
         cursor.execute('''
         CREATE TABLE init(
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            table_name txt not null,
+            table_name txt not null unique,
             kvf txt not null,
             vkf txt not null
         )''')
@@ -62,6 +62,7 @@ def initTable(tname,source):
     #    print('Init table fail!')
         
         
+
 class rst:
     rows = []
     cols = []
@@ -79,8 +80,44 @@ class rst:
             #print(str(row[1]))
             l.append(row[colindex])
         return l
-    
+    def set(self,sql):
+        self.cols = self.getFromSql(sql)
+        l=[]
+        self.rows = list(cursor.execute(sql))
+        for r in self.rows:
+            l.append(list(r))
+        self.rows = l
+    def key(self,index):
+        row = self.rows[index]
+        #print(row)
+        i = self.cols.index('key')
+        return row[i]
+    def yes(self,index):
+        row = self.rows[index]
+        #print('org:' + str(row))
+        i = self.cols.index('yes')
+        row[i] = row[i] + 1
+        #print('chg:' + str(row))
+        #print('rows:' + str(self.rows))
+    def no(self,index):
+        row = self.rows[index]
+        #print('org:' + str(row))
+        i = self.cols.index('no')
+        row[i] = row[i] + 1
+        #print('chg:' + str(row))
+        #print('rows:' + str(self.rows))
+    def value(self,index):
+        row = self.rows[index]
+        i = self.cols.index('value')
+        return row[i]
+        #print(row)
     def __init__(self,sql):
         self.cols = self.getFromSql(sql)
+        l=[]
         self.rows = list(cursor.execute(sql))
+        for r in self.rows:
+            l.append(list(r))
+        self.rows = l
+        
+        
 #cfg.modules.append(modeEntity('五十音图'))
